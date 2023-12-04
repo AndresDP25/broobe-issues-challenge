@@ -85,18 +85,21 @@ export default function Dashboard() {
                   type="text"
                   placeholder="Name Issue"
                   value={name}
+                  required
                   onChange={(e) => setName(e.target.value)}
                 />
                 <input className="add"
                   type="text"
                   placeholder="Description Issue"
                   value={description}
+                  required
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <input className="add"
                   type="text"
                   placeholder="Priority Issue"
                   value={priority}
+                  required
                   onChange={(e) => setPriority(e.target.value)}
                 />
                 </div>

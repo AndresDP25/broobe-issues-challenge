@@ -55,10 +55,10 @@ export default function Login() {
 					<h1 className="log">Log in</h1>
 					{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
 					<label>Email</label>
-					<input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+					<input type="text" value={email} required onChange={(e) => setEmail(e.target.value)} />
 
 					<label>Password</label>
-					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+					<input type="password" value={password} required onChange={(e) => setPassword(e.target.value)}/>
 
 					<button>Log in</button>
 					<p>
