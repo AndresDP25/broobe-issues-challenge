@@ -13,7 +13,7 @@ Clona este repositorio:
 
 bash
 Copy code
-git clone https://github.com/tu-usuario/tu-repo.git
+git clone https://github.com/AndresDP25/broobe-issues-challenge
 Ingresa al directorio del proyecto:
 
 bash
