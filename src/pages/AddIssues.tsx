@@ -1,18 +1,14 @@
 import { useState } from "react";
 import PortalLayout from "../layout/PortalLayout";
-
-interface Issue {
-	id?: number;
-	name: string;
-	description: string;
-	priority_id: number
-}
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [priority, setPriority] = useState("");
-	const [issues, setIssues] = useState<Issue | null>(null);
+
+	const goTo = useNavigate();
+
 
 	async function createIssue() {
 		const accessToken = localStorage.getItem('token');
@@ -27,10 +23,11 @@ export default function Dashboard() {
 			body: JSON.stringify({ name, description, priority_id: priority }),
 		  });
 		  if (response.ok) {
-			const issue = (await response.json()) as Issue;
+
 			setName("");
         	setDescription("");
         	setPriority("");
+			goTo("/dashboard")
 		  } else console.log("Failed to create issue:", response.status, response.statusText)
 		} catch (error) {
 			console.log(error);

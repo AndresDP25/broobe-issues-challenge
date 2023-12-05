@@ -1,75 +1,90 @@
-import DefaultLayout from "../layout/DefaultLayout"
+import DefaultLayout from "../layout/DefaultLayout";
 import { Link } from "react-router-dom";
-import { useState } from "react"
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom';
 import './Login.css';
 
-
-
 export default function Login() {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [errorResponse, setErrorResponse] = useState("");
-	console.log(import.meta.env.VITE_URL)
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorResponse, setErrorResponse] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
-	const auth = useAuth();
+    const auth = useAuth();
 
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
-		e.preventDefault();
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
 
-		try {
-			const response = await fetch(`${import.meta.env.VITE_URL}/login`,{
-				method:'POST',
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					email,
-					password
-				}),
-			});
+        // Validación de campos obligatorios
+        if (!email || !password) {
+            setErrorResponse('Please fill in all fields');
+            return;
+        }
 
-			if(response.ok){
-				const data = await response.json();
+        // Validación de formato de correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setEmailError('Please enter a valid email address');
+            return;
+        }
 
-				if(data.token){
-					auth.saveToken(data.token);
-				} 
-			} else {
-				setErrorResponse('Something went wrong');
-			}
-		} catch (error) {
-			console.log(error)
-		}
-	}
+        try {
+            const response = await fetch(`${import.meta.env.VITE_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
+            });
 
-	if (auth.isAuthenticated){
-		return <Navigate to="dashboard" />
-	}
+            if (response.ok) {
+                const data = await response.json();
 
-	return (
-		<DefaultLayout>
-			<>
-				<div className="container">
-					<form className="form"  onSubmit={handleSubmit}>
-						<h1 className="title">Log in</h1>
-						{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
-						<label htmlFor="email">Email</label>
-						<input type="text" id="email" value={email}  onChange={(e) => setEmail(e.target.value)} />
-					
-						<label  htmlFor="password">Password</label>
-						<input type="password" id="password" value={password}  onChange={(e) => setPassword(e.target.value)}/>
-					
-						<button>Log in</button>
-						<p>
-							Don't have an account?  
-							<Link to="/signup"> Sign up here</Link>
-						</p>
-					</form>
-				</div>
+                if (data.token) {
+                    auth.saveToken(data.token);
+                    auth.saveMail(email);
+                }
+            } else {
+                const errorData = await response.json();
+                setErrorResponse(errorData.message || 'Something went wrong');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-			</>
-		</DefaultLayout>
-	)
+    if (auth.isAuthenticated) {
+        return <Navigate to="dashboard" />;
+    }
+
+    return (
+        <DefaultLayout>
+            <>
+                <div className="container">
+                    <form className="form" onSubmit={handleSubmit}>
+                        <h1 className="title">Log in</h1>
+                        {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
+                        <label htmlFor="email">Email</label>
+                        <input type="text" id="email" value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(''); }} />
+                        {!!emailError && <div className="errorMessage">{emailError}</div>}
+
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" value={password} onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }} />
+                        {!!passwordError && <div className="errorMessage">{passwordError}</div>}
+
+                        <button>Log in</button>
+                        <p>
+                            Don't have an account?
+                            <Link to="/signup"> Sign up here</Link>
+                        </p>
+                    </form>
+                </div>
+            </>
+        </DefaultLayout>
+    );
 }
