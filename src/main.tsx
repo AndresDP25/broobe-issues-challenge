@@ -2,11 +2,14 @@ import './index.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Login from './routes/Login.tsx'
-import Signup from './routes/Signup.tsx'
-import Dashboard from './routes/Dashboard.tsx'
-import ProtectedRoute from './routes/ProtectedRoute.tsx'
-import AuthProvider from './context/AuthProvider.tsx'
+import Login from './pages/Login.tsx'
+import Signup from './pages/Signup.tsx'
+import Dashboard from './pages/Dashboard.tsx'
+import AddIssues from './pages/AddIssues.tsx'
+import EditIssues from './pages/EditIssues.tsx'
+import ProtectedRoute from './pages/ProtectedRoute.tsx'
+import AuthProvider from './provider/AuthProvider.tsx'
+
 
 const router = createBrowserRouter([
   {
@@ -22,8 +25,28 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "dashboard",
+        path: "/dashboard",
         element: <Dashboard />
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/addissues",
+        element: <AddIssues />
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/editissues",
+        element: <EditIssues />
       },
     ]
   },

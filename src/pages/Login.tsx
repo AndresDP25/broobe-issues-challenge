@@ -1,17 +1,17 @@
 import DefaultLayout from "../layout/DefaultLayout"
 import { Link } from "react-router-dom";
 import { useState } from "react"
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../context/AuthContext";
 import { Navigate } from 'react-router-dom'
-import { API_URL } from "../context/constants";
-import { AuthResponse } from "../types/types";
 import './Login.css';
+
 
 
 export default function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorResponse, setErrorResponse] = useState("");
+	console.log(import.meta.env.VITE_URL)
 
 	const auth = useAuth();
 
@@ -19,7 +19,7 @@ export default function Login() {
 		e.preventDefault();
 
 		try {
-			const response = await fetch(`${API_URL}/login`,{
+			const response = await fetch(`${import.meta.env.VITE_URL}/login`,{
 				method:'POST',
 				headers: {
 					"Content-Type": "application/json"
@@ -31,10 +31,10 @@ export default function Login() {
 			});
 
 			if(response.ok){
-				const json = (await response.json()) as AuthResponse;
+				const data = await response.json();
 
-				if(json){
-					auth.saveToken(json);
+				if(data.token){
+					auth.saveToken(data.token);
 				} 
 			} else {
 				setErrorResponse('Something went wrong');
@@ -51,21 +51,23 @@ export default function Login() {
 	return (
 		<DefaultLayout>
 			<>
-				<form className="form"  onSubmit={handleSubmit}>
-					<h1 className="log">Log in</h1>
-					{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
-					<label>Email</label>
-					<input type="text" value={email} required onChange={(e) => setEmail(e.target.value)} />
-
-					<label>Password</label>
-					<input type="password" value={password} required onChange={(e) => setPassword(e.target.value)}/>
-
-					<button>Log in</button>
-					<p>
-						Don't have an account?  
-						<Link to="/signup"> Sign up here</Link>
-					</p>
-				</form>
+				<div className="container">
+					<form className="form"  onSubmit={handleSubmit}>
+						<h1 className="title">Log in</h1>
+						{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
+						<label htmlFor="email">Email</label>
+						<input type="text" id="email" value={email}  onChange={(e) => setEmail(e.target.value)} />
+					
+						<label  htmlFor="password">Password</label>
+						<input type="password" id="password" value={password}  onChange={(e) => setPassword(e.target.value)}/>
+					
+						<button>Log in</button>
+						<p>
+							Don't have an account?  
+							<Link to="/signup"> Sign up here</Link>
+						</p>
+					</form>
+				</div>
 
 			</>
 		</DefaultLayout>

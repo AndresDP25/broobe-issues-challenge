@@ -1,8 +1,7 @@
 import { useState } from "react";
 import DefaultLayout from "../layout/DefaultLayout";
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from "../context/AuthProvider";
-import { API_URL } from "../context/constants";
+import { useAuth } from "../context/AuthContext";
 
 export default function Signup() {
 	const [name, setName] = useState('');
@@ -18,7 +17,7 @@ export default function Signup() {
 		e.preventDefault();
 
 		try {
-			const response = await fetch(`${API_URL}/users`,{
+			const response = await fetch(`${import.meta.env.VITE_URL}/users`,{
 				method:'POST',
 				headers: {
 					"Content-Type": "application/json"
@@ -49,20 +48,22 @@ export default function Signup() {
 
   return (
 	<DefaultLayout>
-		<form className="form" onSubmit={handleSubmit}>
-			<h1>Sign up</h1>
-			{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
-			<label>Username</label>
-			<input type="text" value={name}  name="name" required onChange={(e) => setName(e.target.value)} />
-
-			<label>Email</label>
-			<input type="text" value={email} name="email" required onChange={(e) => setEmail(e.target.value)} />
-
-			<label>Password</label>
-			<input type="password" name="password" value={password} required onChange={(e) => setPassword(e.target.value)} />
-
-			<button>Create User</button>
-		</form>
+		<div  className="container">
+			<form className="form" onSubmit={handleSubmit}>
+				<h1 className="title">Sign up</h1>
+				{!!errorResponse && <div className="errorMessage">{errorResponse}</div> }
+				<label  htmlFor="name">Username</label>
+				<input type="text"  id="name" value={name}  name="name" required onChange={(e) => setName(e.target.value)} />
+			
+				<label  htmlFor="email">Email</label>
+				<input type="text" id="email" value={email} name="email" required onChange={(e) => setEmail(e.target.value)} />
+			
+				<label htmlFor="password">Password</label>
+				<input type="password" id="password" name="password" value={password} required onChange={(e) => setPassword(e.target.value)} />
+			
+				<button>Create User</button>
+			</form>
+		</div>
 	</DefaultLayout>
   )
 }

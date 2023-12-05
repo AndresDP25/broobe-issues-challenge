@@ -1,15 +1,10 @@
-import { useContext, createContext, useState } from "react";
+import { useState } from "react";
+import AuthContext from "../context/AuthContext";
 
 interface AuthProviderProps{
 	children: React.ReactNode;
 }
 
-const AuthContext = createContext({
-	isAuthenticated: false,
-	getAccessToken: () => {},
-	saveToken : (_token: object) => {},
-	signout: () => {},
-});
 
 export default function AuthProvider({children}: AuthProviderProps) {
 
@@ -26,9 +21,8 @@ export default function AuthProvider({children}: AuthProviderProps) {
 		setIsAuthenticated(false);
 	  }
 
-	function saveToken (token: object){
-		const tokenString = JSON.stringify(token);
-		localStorage.setItem("token", tokenString);
+	function saveToken (token: string){
+		localStorage.setItem("token", token);
 		setIsAuthenticated(true);
 	}
 
@@ -45,5 +39,3 @@ export default function AuthProvider({children}: AuthProviderProps) {
 		</AuthContext.Provider>
 	)
 }
-
-export const useAuth = () => useContext(AuthContext);
