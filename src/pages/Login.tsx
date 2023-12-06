@@ -1,7 +1,7 @@
 import DefaultLayout from "../layout/DefaultLayout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hook/useAuth";
 import { Navigate } from 'react-router-dom';
 import './Login.css';
 

@@ -17,7 +17,7 @@ export default function Dashboard() {
 	async function updateIssues() {
 		const accessToken = localStorage.getItem('token');
 
-		const shouldDelete = window.confirm("Are you sure you want to delete this issue?");
+		const shouldDelete = window.confirm("Are you sure you want to update this issue?");
 
 		if (!shouldDelete) {
 			return; // No realizar la eliminación si el usuario cancela

@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard.tsx'
 import AddIssues from './pages/AddIssues.tsx'
 import EditIssues from './pages/EditIssues.tsx'
 import ProtectedRoute from './pages/ProtectedRoute.tsx'
-import AuthProvider from './provider/AuthProvider.tsx'
+import { AuthProvider } from './context/Auth.tsx'
 
 
 const router = createBrowserRouter([
