@@ -64,27 +64,25 @@ export default function Login() {
 
     return (
         <DefaultLayout>
-            <>
-                <div className="container">
-                    <form className="form" onSubmit={handleSubmit}>
-                        <h1 className="title">Log in</h1>
-                        {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
-                        <label htmlFor="email">Email</label>
-                        <input type="text" id="email" value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(''); }} />
-                        {!!emailError && <div className="errorMessage">{emailError}</div>}
+            <div className="container">
+                <form className="form" onSubmit={handleSubmit}>
+                    <h1 className="title">Log in</h1>
+                    {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
+                    <label htmlFor="email">Email</label>
+                    <input type="text" id="email" value={email} onChange={(e) => { setEmail(e.target.value); setEmailError(''); }} />
+                    {!!emailError && <div className="errorMessage">{emailError}</div>}
 
-                        <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={password} onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }} />
-                        {!!passwordError && <div className="errorMessage">{passwordError}</div>}
+                    <label htmlFor="password">Password</label>
+                    <input type="password" id="password" value={password} onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }} />
+                    {!!passwordError && <div className="errorMessage">{passwordError}</div>}
 
-                        <button>Log in</button>
-                        <p>
-                            Don't have an account?
-                            <Link to="/signup"> Sign up here</Link>
-                        </p>
-                    </form>
-                </div>
-            </>
+                    <button>Log in</button>
+                    <p>
+                        Don't have an account?
+                        <Link to="/signup"> Sign up here</Link>
+                    </p>
+                </form>
+            </div>
         </DefaultLayout>
     );
 }

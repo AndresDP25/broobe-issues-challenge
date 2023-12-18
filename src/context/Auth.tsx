@@ -4,21 +4,33 @@ interface AuthProviderProps{
 	children: React.ReactNode;
 }
 
-export const AuthContext = createContext<any>(null);
+interface AuthContextType {
+	isAuthenticated: boolean;
+	email: string | null;
+	getAccessToken: () => string;
+	saveToken: (token: string) => void;
+	saveMail: (email: string) => void;
+	signout: () => void;
+  }
 
-// 2.Crear el Provider, para proveer el contexto.
+
+
+export const AuthContext = createContext<AuthContextType>( {} as AuthContextType);
+
 export function AuthProvider({ children }: AuthProviderProps) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [accessToken, setAccessToken] = useState("");
-	const [email, setEmail] = useState(null);
+	const [email, setEmail] = useState<string | null>(null);
 
 	useEffect(() => {
-		
 		const storedToken = localStorage.getItem("token");
+		const storedEmail = localStorage.getItem("email");
 		if (storedToken) {
 			setIsAuthenticated(true);
 			setAccessToken(storedToken);
+			setEmail(storedEmail);
 		}
+		
 	}, []);
 
 	function getAccessToken() {
@@ -27,11 +39,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 	function signout() {
 		localStorage.removeItem("token");
+		localStorage.removeItem("email");
 		setAccessToken("");
 		setIsAuthenticated(false);
+		setEmail(null);
 	}
 
 	function saveMail (email: any){
+		localStorage.setItem("email", email);
 		setEmail(email);
 	}
 

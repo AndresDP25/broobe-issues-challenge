@@ -10,9 +10,7 @@ interface Issue {
   priority_id: number
 }
 
-
 export default function Dashboard() {
-  // const auth = useAuth();
 
   const [issues, setIssues] = useState<Issue[]>([]);
 
@@ -31,8 +29,8 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        const json = await response.json();
-        setIssues(json);
+        const data = await response.json();
+        setIssues(data);
       }
     } catch (error) {
       console.log(error)
@@ -56,8 +54,7 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        const updatedIssues = issues.filter((issue) => issue.id !== id);
-        setIssues(updatedIssues);
+        getIssues()
       } else {
         console.error("Failed to delete issue:", response.status, response.statusText);
       }
@@ -65,9 +62,6 @@ export default function Dashboard() {
       console.log(error)
     }
   }
-
-
-
 
   useEffect(() => {
     getIssues();

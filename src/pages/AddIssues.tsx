@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PortalLayout from "../layout/PortalLayout";
 import { useNavigate } from 'react-router-dom';
+import { isValidLettersOnly, isValidPriority } from '../hook/useValidate';
 
 export default function Dashboard() {
 	const [name, setName] = useState("");
@@ -12,34 +13,58 @@ export default function Dashboard() {
 
 	async function createIssue() {
 		const accessToken = localStorage.getItem('token');
-  
-		try {
-		  const response = await fetch(`${import.meta.env.VITE_URL}/issues`, {
-			method: "POST",
-			headers: {
-			  "Content-Type": "application/json",
-			  Authorization: `Bearer ${accessToken}`,
-			},
-			body: JSON.stringify({ name, description, priority_id: priority }),
-		  });
-		  if (response.ok) {
 
-			setName("");
-        	setDescription("");
-        	setPriority("");
-			goTo("/dashboard")
-		  } else console.log("Failed to create issue:", response.status, response.statusText)
+		try {
+			const response = await fetch(`${import.meta.env.VITE_URL}/issues`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${accessToken}`,
+				},
+				body: JSON.stringify({ name, description, priority_id: priority }),
+			});
+			if (response.ok) {
+
+				setName("");
+				setDescription("");
+				setPriority("");
+				goTo("/dashboard")
+			} else console.log("Failed to create issue:", response.status, response.statusText)
 		} catch (error) {
 			console.log(error);
-		 }
+		}
 	}
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		createIssue();
-	  }
+	}
 
+	const handlePriorityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
+
+
+		if (isValidPriority(inputValue)) {
+			setPriority(inputValue);
+		}
+	};
+
+	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
 	  
+		if (isValidLettersOnly(inputValue)) {
+		  setName(inputValue);
+		}
+	};
+
+	const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
+	  
+		if (isValidLettersOnly(inputValue)) {
+		  setDescription(inputValue);
+		}
+	};
+
 	return (
 		<PortalLayout>
 			<div className="container">
@@ -52,7 +77,7 @@ export default function Dashboard() {
 							placeholder="Issue Name"
 							value={name}
 							required
-							onChange={(e) => setName(e.target.value)}
+							onChange={handleNameChange}
 						/>
 
 						<input className="inpt"
@@ -61,15 +86,15 @@ export default function Dashboard() {
 							placeholder="Issue Description"
 							value={description}
 							required
-							onChange={(e) => setDescription(e.target.value)}
+							onChange={handleDescriptionChange}
 						/>
 						<input className="inpt"
 							type="text"
 							id="priority"
-							placeholder="Issue Priority "
+							placeholder="Issue Priority: 1 - 4"
 							value={priority}
 							required
-							onChange={(e) => setPriority(e.target.value)}
+							onChange={handlePriorityChange}
 						/>
 					</div>
 					<div>

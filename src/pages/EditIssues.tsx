@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PortalLayout from "../layout/PortalLayout";
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
+import { isValidLettersOnly, isValidPriority } from '../hook/useValidate';
 
 export default function Dashboard() {
 
@@ -17,10 +17,10 @@ export default function Dashboard() {
 	async function updateIssues() {
 		const accessToken = localStorage.getItem('token');
 
-		const shouldDelete = window.confirm("Are you sure you want to update this issue?");
+		const shouldUpdate = window.confirm("Are you sure you want to update this issue?");
 
-		if (!shouldDelete) {
-			return; // No realizar la eliminación si el usuario cancela
+		if (!shouldUpdate) {
+			return; 
 		}
 
 		try {
@@ -44,11 +44,36 @@ export default function Dashboard() {
 			console.log(error);
 		}
 	}
+	
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		updateIssues();
 	}
 
+	const handlePriorityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
+
+
+		if (isValidPriority(inputValue)) {
+			setPriority(inputValue);
+		}
+	};
+
+	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
+	  
+		if (isValidLettersOnly(inputValue)) {
+		  setName(inputValue);
+		}
+	};
+
+	const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const inputValue = e.target.value;
+	  
+		if (isValidLettersOnly(inputValue)) {
+		  setDescription(inputValue);
+		}
+	};
 
 	return (
 		<PortalLayout>
@@ -62,7 +87,7 @@ export default function Dashboard() {
 							placeholder="Issue Name"
 							value={name}
 							required
-							onChange={(e) => setName(e.target.value)}
+							onChange={handleNameChange}
 						/>
 
 						<input className="inpt"
@@ -71,7 +96,7 @@ export default function Dashboard() {
 							placeholder="Issue Description"
 							value={description}
 							required
-							onChange={(e) => setDescription(e.target.value)}
+							onChange={handleDescriptionChange}
 						/>
 						<input className="inpt"
 							type="text"
@@ -79,7 +104,7 @@ export default function Dashboard() {
 							placeholder="Issue Priority "
 							value={priority}
 							required
-							onChange={(e) => setPriority(e.target.value)}
+							onChange={handlePriorityChange}
 						/>
 					</div>
 					<div>
